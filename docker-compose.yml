@@ -1,16 +1,16 @@
 version: "3.9"                            # version de docker-compose
 services:                                 # por cada servicio hay una aplicación en un container
   api:
-    build: .                              # se especifica la ubicación del Dockerfile
+    build: ./api                          # se especifica la ubicación del Dockerfile
     command: npm start                    # se puede incluir un comando cuando se inicializa el container    
-    volumes:                              # se mapean archivos del host al contenedor 
-      - .:/app
-      - /app/node_modules
+    volumes:                              # se mapean archivos del host al contenedor / similar a COPY en Dockerfile
+      - ./api:/api
+      - /api/node_modules
     networks:                             # se puede especificar la conexión de red segura entre los contenedores
       - app-network
 
   nginx:
-    image: nginx:latest                   # Se hace pull de la imagen de nginx desde dockerhub
+    image: nginx:latest                   # Se hace pull de la imagen de nginx desde dockerhub / same as From <algo> in dockerfile
     volumes:
       - ./nginx:/etc/nginx/conf.d
     ports:
@@ -19,6 +19,7 @@ services:                                 # por cada servicio hay una aplicació
       - api
     networks:                 
       - app-network
-networks:
+
+networks:                                 # Se generan las dependencia para establecer la red
   app-network:
     driver: bridge
